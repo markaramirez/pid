@@ -4,13 +4,14 @@ import java.util.Iterator;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.TimeUtils;
 
 public class EmptyMode extends MainGameScreen {
 	
-	public EmptyMode(TIDS gam) {
-		super(gam);
+	public EmptyMode(TIDS gam, OrthographicCameraWithVirtualViewport cam) {
+		super(gam, cam);
 	}
 	
 	@Override
@@ -154,7 +155,7 @@ public class EmptyMode extends MainGameScreen {
 		if (lives <= 0)
 		{
 			dieMethod();
-			game.setScreen(new GameOver(game));
+			game.setScreen(new GameOver(game, camera));
 			dispose();
 		}
 		camera.update();

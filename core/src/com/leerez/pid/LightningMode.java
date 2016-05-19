@@ -4,13 +4,14 @@ import java.util.Iterator;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.TimeUtils;
 
 public class LightningMode extends MainGameScreen{
 
-	public LightningMode(TIDS gam) {
-		super(gam);
+	public LightningMode(TIDS gam, OrthographicCameraWithVirtualViewport cam) {
+		super(gam, cam);
 	}
 	
 	private void colorChange() {
@@ -96,7 +97,7 @@ public class LightningMode extends MainGameScreen{
 		while (iter.hasNext()) {
 			Rectangle alien = iter.next();
 			alien.y -= 900 * Gdx.graphics.getDeltaTime();
-			if (alien.y + 64 < 0)
+			if (alien.y + assetSize < 0)
 			{
 				iter.remove();
 				dodges++;
@@ -111,7 +112,7 @@ public class LightningMode extends MainGameScreen{
 		while (iter2.hasNext()) {
 			Rectangle alien2 = iter2.next();
 			alien2.y -= 940 * Gdx.graphics.getDeltaTime();
-			if (alien2.y + 64 < 0)
+			if (alien2.y + assetSize < 0)
 			{
 				iter2.remove();
 				dodges++;
@@ -126,7 +127,7 @@ public class LightningMode extends MainGameScreen{
 		while (iter3.hasNext()) {
 			Rectangle alien3 = iter3.next();
 			alien3.y -= 980 * Gdx.graphics.getDeltaTime();
-			if (alien3.y + 64 < 0)
+			if (alien3.y + assetSize < 0)
 			{
 				iter3.remove();
 				dodges++;
@@ -141,7 +142,7 @@ public class LightningMode extends MainGameScreen{
 		while (iterk1.hasNext()) {
 			Rectangle killer = iterk1.next();
 			killer.y -= 900 * Gdx.graphics.getDeltaTime();
-			if (killer.y + 64 < 0)
+			if (killer.y + assetSize < 0)
 			{
 				iterk1.remove();
 			}
@@ -155,7 +156,7 @@ public class LightningMode extends MainGameScreen{
 		while (iterk2.hasNext()) {
 			Rectangle killer2 = iterk2.next();
 			killer2.y -= 900 * Gdx.graphics.getDeltaTime();
-			if (killer2.y + 64 < 0)
+			if (killer2.y + assetSize < 0)
 			{
 				iterk2.remove();
 			}
@@ -169,7 +170,7 @@ public class LightningMode extends MainGameScreen{
 		while (iterk3.hasNext()) {
 			Rectangle killer3 = iterk3.next();
 			killer3.y -= 900 * Gdx.graphics.getDeltaTime();
-			if (killer3.y + 64 < 0)
+			if (killer3.y + assetSize < 0)
 			{
 				iterk3.remove();
 			}
@@ -207,8 +208,8 @@ public class LightningMode extends MainGameScreen{
 		}
 		if (ship.x < 0)
 			ship.x = 0;
-		if (ship.x > WORLD_WIDTH - 64)
-			ship.x = WORLD_WIDTH - 64;
+		if (ship.x > WORLD_WIDTH - textureSize)
+			ship.x = WORLD_WIDTH - textureSize;
 		alien1millls = 750;
 		a2millls = 800;
 		a3millls = 850;
@@ -217,38 +218,38 @@ public class LightningMode extends MainGameScreen{
 		if (lives <= 0)
 		{
 			dieMethod();
-			game.setScreen(new GameOver(game));
+			game.setScreen(new GameOver(game, camera));
 			dispose();
 		}
 		camera.update();
 		game.batch.setProjectionMatrix(camera.combined);
 		game.batch.begin();
 		white.draw(game.batch, "Dodges: " + dodges, 0, WORLD_HEIGHT - 10);
-		game.batch.draw(shipImage, ship.x, ship.y);
+		game.batch.draw(shipImage, ship.x, ship.y, textureSize, textureSize);
 		for (Rectangle alien : aliens) {
-			game.batch.draw(alienImage, alien.x, alien.y);
+			game.batch.draw(alienImage, alien.x, alien.y, textureSize, textureSize);
 		}
 		for (Rectangle alien2 : aliens2) {
-			game.batch.draw(alien2Image, alien2.x, alien2.y);
+			game.batch.draw(alien2Image, alien2.x, alien2.y, textureSize, textureSize);
 		}
 		for (Rectangle alien3 : aliens3) {
-			game.batch.draw(alien3Image, alien3.x, alien3.y);
+			game.batch.draw(alien3Image, alien3.x, alien3.y, textureSize, textureSize);
 		}
 		for (Rectangle ak1 : aks1) {
-			game.batch.draw(killer1Image, ak1.x, ak1.y);
+			game.batch.draw(killer1Image, ak1.x, ak1.y, textureSize, textureSize);
 		}
 		for (Rectangle ak2 : aks2) {
-			game.batch.draw(killer2Image, ak2.x, ak2.y);
+			game.batch.draw(killer2Image, ak2.x, ak2.y, textureSize, textureSize);
 		}
 		for (Rectangle ak3 : aks3) {
-			game.batch.draw(killer3Image, ak3.x, ak3.y);
+			game.batch.draw(killer3Image, ak3.x, ak3.y, textureSize, textureSize);
 		}
 		game.batch.end();
 	}
  
 	@Override
 	public void resize(int width, int height) {
-		viewport.update(width,height);
+
 	}
  
 	@Override

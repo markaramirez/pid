@@ -3,30 +3,24 @@ package com.leerez.pid;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.utils.viewport.FillViewport;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class MainGameScreen implements Screen
 {
 	final TIDS game;
 	Texture shipImage, alienImage, alien2Image, alien3Image, killer1Image, killer2Image, killer3Image;
-	OrthographicCamera camera;
+	OrthographicCameraWithVirtualViewport camera;
+	// --- Use the newly implemented ortho camera with virtual viewport. --- //
+    //OrthographicCameraWithVirtualViewport camera;
+    //MultipleVirtualViewportBuilder multipleVirtualViewportBuilder;
+
 	Rectangle ship;
 	Array<Rectangle> aliens, aliens2, aliens3, aks1, aks2, aks3;
 	long lastAlienTime, la2t, la3t, lak1t, lak2t, lak3t;
@@ -43,12 +37,14 @@ public class MainGameScreen implements Screen
 
     Viewport viewport;
 
-    final float WORLD_WIDTH = Gdx.graphics.getWidth();
-    final float WORLD_HEIGHT = Gdx.graphics.getHeight();
-
-    float aspectRatio = (float)Gdx.graphics.getWidth() / (float)Gdx.graphics.getHeight();
+    float WORLD_WIDTH, WORLD_HEIGHT, assetSize, textureSize;
  
-	public MainGameScreen(final TIDS gam) {
+	public MainGameScreen(final TIDS gam, OrthographicCameraWithVirtualViewport cam) {
+		camera = cam;
+        WORLD_WIDTH = camera.virtualViewport.getWidth();
+        WORLD_HEIGHT = camera.virtualViewport.getHeight();
+        assetSize = WORLD_WIDTH * .08f;
+		textureSize = WORLD_WIDTH * .1f;
 		this.game = gam;
 		shipImage = new Texture(Gdx.files.internal("markship.png"));
 		alienImage = new Texture(Gdx.files.internal("markalien.png"));
@@ -60,15 +56,22 @@ public class MainGameScreen implements Screen
 		creep2000 = Gdx.audio.newMusic(Gdx.files.internal("PIDv.1.wav"));
 		creep2000.setLooping(true);
 		white = new BitmapFont(Gdx.files.internal("white.fnt"));
-		camera = new OrthographicCamera(WORLD_WIDTH, WORLD_HEIGHT);
-        camera.translate(camera.viewportWidth/2, camera.viewportHeight/2);
-        viewport = new FillViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
-        viewport.apply();
+
+        // --- Created the virtual viewport to add to camera --- //
+        //multipleVirtualViewportBuilder = new MultipleVirtualViewportBuilder(800, 480, 854, 600);
+        //VirtualViewport virtualViewport = multipleVirtualViewportBuilder.getVirtualViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		//camera = new OrthographicCamera(WORLD_WIDTH, WORLD_HEIGHT);
+        //camera = new OrthographicCameraWithVirtualViewport(virtualViewport);
+
+        //camera.translate(camera.viewportWidth/2, camera.viewportHeight/2);
+        //viewport = new FillViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
+        //viewport.apply();
+
 		ship = new Rectangle();
-		ship.x = WORLD_WIDTH / 2 - 32;
+		ship.x = WORLD_WIDTH / 2 - (assetSize/2);
 		ship.y = 20;
-		ship.width = 64;
-		ship.height = 64;
+		ship.width = assetSize;
+		ship.height = assetSize;
 		alien1millls = 1500;
 		a2millls = 1600;
 		a3millls = 1700;
@@ -96,30 +99,30 @@ public class MainGameScreen implements Screen
  
 	protected void spawnAlien() {
 		Rectangle alien = new Rectangle();
-		alien.x = MathUtils.random(0, WORLD_WIDTH - 64);
-		alien.y = WORLD_HEIGHT + 100;
-		alien.width = 64;
-		alien.height = 64;
+		alien.x = MathUtils.random(0, WORLD_WIDTH - assetSize);
+		alien.y = WORLD_HEIGHT + assetSize + 10;
+		alien.width = assetSize;
+		alien.height = assetSize;
 		aliens.add(alien);
 		lastAlienTime = TimeUtils.millis();
 	}
 	
 	protected void spawnAlien2() {
 		Rectangle alien2 = new Rectangle();
-		alien2.x = MathUtils.random(0, WORLD_WIDTH- 64);
-		alien2.y = WORLD_HEIGHT + 100;
-		alien2.width = 64;
-		alien2.height = 64;
+		alien2.x = MathUtils.random(0, WORLD_WIDTH- assetSize);
+		alien2.y = WORLD_HEIGHT + 10 + assetSize;
+		alien2.width = assetSize;
+		alien2.height = assetSize;
 		aliens2.add(alien2);
 		la2t = TimeUtils.millis();
 	}
 	
 	protected void spawnAlien3() {
 		Rectangle alien3 = new Rectangle();
-		alien3.x = MathUtils.random(0, WORLD_WIDTH - 64);
-		alien3.y = WORLD_HEIGHT + 100;
-		alien3.width = 64;
-		alien3.height = 64;
+		alien3.x = MathUtils.random(0, WORLD_WIDTH - assetSize);
+		alien3.y = WORLD_HEIGHT + 10 + assetSize;
+		alien3.width = assetSize;
+		alien3.height = assetSize;
 		aliens3.add(alien3);
 		la3t = TimeUtils.millis();
 	}
@@ -129,10 +132,10 @@ public class MainGameScreen implements Screen
 		if(ch1 == 1)
 		{
 			Rectangle ak1 = new Rectangle();
-			ak1.x = MathUtils.random(0, WORLD_WIDTH - 64);
-			ak1.y = WORLD_HEIGHT + 100;
-			ak1.width = 64;
-			ak1.height = 64;
+			ak1.x = MathUtils.random(0, WORLD_WIDTH - assetSize);
+			ak1.y = WORLD_HEIGHT + 10 + assetSize;
+			ak1.width = assetSize;
+			ak1.height = assetSize;
 			aks1.add(ak1);
 		}
 		lak1t = TimeUtils.millis();
@@ -144,10 +147,10 @@ public class MainGameScreen implements Screen
 		if(ch2 == 1)
 		{
 			Rectangle ak2 = new Rectangle();
-			ak2.x = MathUtils.random(0, WORLD_WIDTH - 64);
-			ak2.y = WORLD_HEIGHT + 100;
-			ak2.width = 64;
-			ak2.height = 64;
+			ak2.x = MathUtils.random(0, WORLD_WIDTH - assetSize);
+			ak2.y = WORLD_HEIGHT + 10 + assetSize;
+			ak2.width = assetSize;
+			ak2.height = assetSize;
 			aks2.add(ak2);
 		}
 		lak2t = TimeUtils.millis();
@@ -158,10 +161,10 @@ public class MainGameScreen implements Screen
 		if(ch3 == 1)
 		{
 			Rectangle ak3 = new Rectangle();
-			ak3.x = MathUtils.random(0, WORLD_WIDTH - 64);
-			ak3.y = WORLD_HEIGHT + 100;
-			ak3.width = 64;
-			ak3.height = 64;
+			ak3.x = MathUtils.random(0, WORLD_WIDTH - assetSize);
+			ak3.y = WORLD_HEIGHT + 10 + assetSize;
+			ak3.width = assetSize;
+			ak3.height = assetSize;
 			aks3.add(ak3);
 		}
 		lak3t = TimeUtils.millis();
@@ -175,6 +178,7 @@ public class MainGameScreen implements Screen
 	@Override
 	public void resize(int width, int height) {
 		// TODO Auto-generated method stub
+        camera.position.set(Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f, 0f);
 	}
 
 	@Override

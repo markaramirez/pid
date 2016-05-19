@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -29,9 +30,10 @@ public class Settings implements Screen{
 	public Table table;
 	Sound selectSound;
 	TextButton mButton, sButton, buttonBack;
-
-	public Settings(TIDS gam) {
+	OrthographicCameraWithVirtualViewport camera;
+	public Settings(TIDS gam, OrthographicCameraWithVirtualViewport cam) {
 		game = gam;
+		camera = cam;
         System.out.println(Gdx.graphics.getWidth() +" "+ Gdx.graphics.getHeight());
 		stage = new Stage(new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 		Gdx.input.setInputProcessor(stage);
@@ -82,7 +84,7 @@ public class Settings implements Screen{
 				{
 					selectSound.play();
 				}
-				game.setScreen(new MainMenu(game));
+				game.setScreen(new MainMenu(game, camera));
 				dispose();
 			}
 		});

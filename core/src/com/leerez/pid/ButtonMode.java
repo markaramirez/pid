@@ -5,6 +5,7 @@ import java.util.Iterator;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -22,8 +23,8 @@ public class ButtonMode extends MainGameScreen{
 	public Skin skin;
 	boolean left, right;
 	
-	public ButtonMode(TIDS gam) {
-		super(gam);
+	public ButtonMode(TIDS gam, OrthographicCameraWithVirtualViewport cam) {
+		super(gam, cam);
 		stage = new Stage();
 		atlas = new TextureAtlas("button.pack");
 		skin = new Skin(atlas);
@@ -261,7 +262,7 @@ public class ButtonMode extends MainGameScreen{
 		if (lives <= 0)
 		{
 			dieMethod();
-			game.setScreen(new GameOver(game));
+			game.setScreen(new GameOver(game, camera));
 			dispose();
 		}
 		camera.update();

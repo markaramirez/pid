@@ -26,12 +26,11 @@ public class GameOver implements Screen{
 	public Skin skin;
 	TextButton buttonMM;
 	Sound selectSound;
-	OrthographicCamera camera;
+	OrthographicCameraWithVirtualViewport camera;
 	
-	public GameOver(final TIDS gam) {
+	public GameOver(final TIDS gam, OrthographicCameraWithVirtualViewport cam) {
 		game = gam;
-		camera = new OrthographicCamera();
-		camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		camera = cam;
 		white = new BitmapFont(Gdx.files.internal("white.fnt"));
 		selectSound = Gdx.audio.newSound(Gdx.files.internal("select.wav"));
 		stage = new Stage();
@@ -54,7 +53,7 @@ public class GameOver implements Screen{
 				{
 					selectSound.play();
 				}
-				game.setScreen(new MainMenu(game));
+				game.setScreen(new MainMenu(game, camera));
 				dispose();
 			}
 		});

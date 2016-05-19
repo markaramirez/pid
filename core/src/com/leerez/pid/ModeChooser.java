@@ -2,11 +2,16 @@ package com.leerez.pid;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -16,8 +21,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
+
+import java.util.Iterator;
 
 public class ModeChooser implements Screen{
 	
@@ -28,17 +37,30 @@ public class ModeChooser implements Screen{
 	public BitmapFont white, bigger;
 	public Label heading, GSL, GS2L, GS3L, GS4L, ur1, ur2, ur3, ur4;
 	public Table table;
+    Texture alienImage;
+    Array<Rectangle> aliens;
 	Sound selectSound;
+    long lastAlienTime;
 	TextButton buttonGS, buttonGS2, buttonBack, buttonL, buttonE;
+	OrthographicCameraWithVirtualViewport camera;
+	float MYwidth, MYheight, assetSize, textureSize;
 
-	public ModeChooser(TIDS gam) {
+	public ModeChooser(TIDS gam, OrthographicCameraWithVirtualViewport cam) {
 		game = gam;
+        camera = cam;
+        MYwidth = camera.virtualViewport.getWidth();
+        MYheight = camera.virtualViewport.getHeight();
+        assetSize = MYwidth * .08f;
+        textureSize = MYwidth * .1f;
 		stage = new Stage(new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 		Gdx.input.setInputProcessor(stage);
 		white = new BitmapFont(Gdx.files.internal("white.fnt"));
 		bigger = new BitmapFont(Gdx.files.internal("bigger.fnt"));
 		atlas = new TextureAtlas("button.pack");
 		selectSound = Gdx.audio.newSound(Gdx.files.internal("select.wav"));
+        aliens = new Array<Rectangle>();
+        alienImage = new Texture(Gdx.files.internal("markalien.png"));
+        spawnAlien();
 		skin = new Skin(atlas);
 		table = new Table(skin);
 		table.setBounds(0 , 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -72,7 +94,7 @@ public class ModeChooser implements Screen{
 				}
 				if(pidPrefs.getRank() >= 3)
 				{
-					game.setScreen(new ButtonMode(game));
+					game.setScreen(new ButtonMode(game, camera));
 				}
 				dispose();
 			}
@@ -86,7 +108,7 @@ public class ModeChooser implements Screen{
 				{
 					selectSound.play();
 				}
-				game.setScreen(new NormalMode(game));
+				game.setScreen(new NormalMode(game, camera));
 				dispose();
 			}
 		});
@@ -99,7 +121,7 @@ public class ModeChooser implements Screen{
 				{
 					selectSound.play();
 				}
-				game.setScreen(new LightningMode(game));
+				game.setScreen(new LightningMode(game, camera));
 				dispose();
 			}
 		});
@@ -114,7 +136,7 @@ public class ModeChooser implements Screen{
 				}
 				if(pidPrefs.getRank() >= 5)
 				{
-					game.setScreen(new EmptyMode(game));
+					game.setScreen(new EmptyMode(game, camera));
 				}
 				dispose();
 			}
@@ -128,7 +150,7 @@ public class ModeChooser implements Screen{
 				{
 					selectSound.play();
 				}
-				game.setScreen(new MainMenu(game));
+				game.setScreen(new MainMenu(game, camera));
 				dispose();
 			}
 		});
@@ -164,24 +186,51 @@ public class ModeChooser implements Screen{
 		stage.addActor(buttonBack);
 	}
 
+    private void spawnAlien() {
+        Rectangle alien = new Rectangle();
+        alien.x = MathUtils.random(0, MYwidth - assetSize);
+        alien.y = MYheight + 100;
+        alien.width = assetSize;
+        alien.height = assetSize;
+        aliens.add(alien);
+        lastAlienTime = TimeUtils.millis();
+    }
+
 	@Override
 	public void render(float delta) {
-        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		Gdx.gl.glClearColor(0f, 0f, 0f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		stage.act(delta);
+        Iterator<Rectangle> iter = aliens.iterator();
+        while (iter.hasNext()) {
+            Rectangle alien = iter.next();
+            alien.y -= 450 * Gdx.graphics.getDeltaTime();
+            if (alien.y + assetSize < 0) {
+                iter.remove();
+            }
+        }
+        if (TimeUtils.millis() - lastAlienTime > 1500) {
+            spawnAlien();
+        }
 		stage.draw();
+
+        camera.update();
+        game.batch.setProjectionMatrix(camera.combined);
+        game.batch.begin();
+        white.draw(game.batch, "Rank: " + pidPrefs.getRank(), MYwidth, MYheight);
+        for (Rectangle alien : aliens) {
+            game.batch.draw(alienImage, alien.x, alien.y, textureSize, textureSize);
+        }
+        game.batch.end();
 	}
 
 	@Override
 	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
-		stage.getViewport().update(width, height, true);
 	}
 
 	@Override
 	public void show() {
-		
+
 	}
 
 	@Override

@@ -8,6 +8,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Gdx2DPixmap;
@@ -48,10 +49,16 @@ public class MainMenu implements Screen{
 	Music mmdrone;
 	TextButton buttonManual, buttonPlay, buttonQuit, buttonSettings;
 	long lastAlienTime;
+	OrthographicCameraWithVirtualViewport camera;
+	float assetSize, textureSize;
+    float MYwidth, MYheight;
 
-    int MYwidth = Gdx.graphics.getWidth(), MYheight = Gdx.graphics.getHeight();
-
-	public MainMenu(TIDS gam) {
+	public MainMenu(TIDS gam, OrthographicCameraWithVirtualViewport cam) {
+        camera = cam;
+		assetSize = camera.virtualViewport.getWidth() * 0.08f;
+        textureSize = camera.virtualViewport.getWidth() * 0.1f;
+        MYwidth = camera.virtualViewport.getWidth();
+        MYheight = camera.virtualViewport.getHeight();
 		game = gam;
 		stage = new Stage(new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 		Gdx.input.setInputProcessor(stage);
@@ -98,7 +105,7 @@ public class MainMenu implements Screen{
 				if(pidPrefs.getSoundPref()) {
 					selectSound.play();
 				}
-				game.setScreen(new ModeChooser(game));
+				game.setScreen(new ModeChooser(game, camera));
 				dispose();
 			}
 		});
@@ -121,8 +128,7 @@ public class MainMenu implements Screen{
 				if(pidPrefs.getSoundPref()) {
 					selectSound.play();
 				}
-                System.out.println(Gdx.graphics.getWidth() +" "+ Gdx.graphics.getHeight());
-				game.setScreen(new Settings(game));
+				game.setScreen(new Settings(game, camera));
 				dispose();
 			}
 		});
@@ -140,22 +146,20 @@ public class MainMenu implements Screen{
 		table.row();
 		table.add(buttonQuit);
 		stage.addActor(table);
-        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 
 	private void spawnAlien() {
 		Rectangle alien = new Rectangle();
-		alien.x = MathUtils.random(0, MYwidth - 64);
+		alien.x = MathUtils.random(0, MYwidth - assetSize);
 		alien.y = MYheight + 100;
-		alien.width = 64;
-		alien.height = 64;
+		alien.width = assetSize;
+		alien.height = assetSize;
 		aliens.add(alien);
 		lastAlienTime = TimeUtils.millis();
 	}
 	
 	@Override
 	public void render(float delta) {
-        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		Gdx.gl.glClearColor(0f, 0f, 0f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		stage.act(delta);
@@ -163,7 +167,7 @@ public class MainMenu implements Screen{
 		while (iter.hasNext()) {
 			Rectangle alien = iter.next();
 			alien.y -= 450 * Gdx.graphics.getDeltaTime();
-			if (alien.y + 64 < 0) {
+			if (alien.y + assetSize < 0) {
 				iter.remove();
 			}
 		}
@@ -171,19 +175,19 @@ public class MainMenu implements Screen{
 			spawnAlien();
 		}
 		stage.draw();
+
+        camera.update();
+        game.batch.setProjectionMatrix(camera.combined);
 		game.batch.begin();
 		white.draw(game.batch, "Rank: " + pidPrefs.getRank(), MYwidth, MYheight);
 		for (Rectangle alien : aliens) {
-			game.batch.draw(alienImage, alien.x, alien.y);
+			game.batch.draw(alienImage, alien.x, alien.y, textureSize, textureSize);
 		}
 		game.batch.end();
 	}
 
 	@Override
 	public void resize(int width, int height) {
-		stage.getViewport().update(width, height, true);
-        MYwidth = width;
-        MYheight = height;
 	}
 
 	@Override
