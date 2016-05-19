@@ -122,10 +122,10 @@ public class MainMenu implements Screen{
 		});
 		buttonSettings = new TextButton("SETTINGS", textButtonStyle); 
 		buttonSettings.pad(25);
-		buttonSettings.addListener(new ClickListener(){
+		buttonSettings.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				if(pidPrefs.getSoundPref()) {
+				if (pidPrefs.getSoundPref()) {
 					selectSound.play();
 				}
 				game.setScreen(new Settings(game, camera));
@@ -179,7 +179,9 @@ public class MainMenu implements Screen{
         camera.update();
         game.batch.setProjectionMatrix(camera.combined);
 		game.batch.begin();
-		white.draw(game.batch, "Rank: " + pidPrefs.getRank(), MYwidth, MYheight);
+		white.draw(game.batch, "Rank: " + pidPrefs.getRank(), 0, MYheight);
+		white.draw(game.batch, "Total XP: " + pidPrefs.getXP(), 0, MYheight - 30);
+		white.draw(game.batch, "XP until next rank-up: " + Leveler.getNeeded(), 0, MYheight - 60);
 		for (Rectangle alien : aliens) {
 			game.batch.draw(alienImage, alien.x, alien.y, textureSize, textureSize);
 		}

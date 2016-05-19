@@ -76,7 +76,8 @@ public class Settings implements Screen{
 			}
 		});
 		buttonBack = new TextButton("Back", textButtonStyle); 
-		buttonBack.setBounds(0, 0, 125, 100);
+		//buttonBack.setBounds(0, 0, 125, 100);
+		buttonBack.pad(25);
 		buttonBack.addListener(new ClickListener(){
 			@Override
 			public void clicked(InputEvent event, float x, float y) {

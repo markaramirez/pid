@@ -73,6 +73,7 @@ public class GameOver implements Screen{
 		white.draw(game.batch, "Highscore: " + pidPrefs.getHighscore(), 20, 490);
 		white.draw(game.batch, "You gained " + GOxpgained + " xp", 20, 400);
 		white.draw(game.batch,"You need " + Leveler.getNeeded() + " xp until next rank-up", 20, 370);
+        white.draw(game.batch, "You current rank is " + pidPrefs.getRank(), 20, 340);
 		game.batch.end();
 	}
 
