@@ -179,9 +179,9 @@ public class MainMenu implements Screen{
         camera.update();
         game.batch.setProjectionMatrix(camera.combined);
 		game.batch.begin();
-		white.draw(game.batch, "Rank: " + pidPrefs.getRank(), 0, MYheight);
-		white.draw(game.batch, "Total XP: " + pidPrefs.getXP(), 0, MYheight - 30);
-		white.draw(game.batch, "XP until next rank-up: " + Leveler.getNeeded(), 0, MYheight - 60);
+		white.draw(game.batch, "Rank: " + pidPrefs.getRank(), MYwidth - (MYwidth * .99f), MYheight);
+		white.draw(game.batch, "Total XP: " + pidPrefs.getXP(), MYwidth - (MYwidth * .99f), MYheight - (MYheight * (1-0.9789063f)));
+		white.draw(game.batch, "XP until next rank-up: " + Leveler.getNeeded(), MYwidth -(MYwidth * .99f), MYheight - (MYheight * (1-0.9578125f)));
 		for (Rectangle alien : aliens) {
 			game.batch.draw(alienImage, alien.x, alien.y, textureSize, textureSize);
 		}
@@ -194,8 +194,7 @@ public class MainMenu implements Screen{
 
 	@Override
 	public void show() {
-		if(pidPrefs.getMusicPref())
-		{
+		if(pidPrefs.getMusicPref()) {
 			mmdrone.play();
 		}
 	}

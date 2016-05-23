@@ -27,10 +27,13 @@ public class GameOver implements Screen{
 	TextButton buttonMM;
 	Sound selectSound;
 	OrthographicCameraWithVirtualViewport camera;
+    float MYwidth, MYheight;
 	
 	public GameOver(final TIDS gam, OrthographicCameraWithVirtualViewport cam) {
 		game = gam;
 		camera = cam;
+        MYwidth = camera.virtualViewport.getWidth();
+        MYheight = camera.virtualViewport.getHeight();
 		white = new BitmapFont(Gdx.files.internal("white.fnt"));
 		selectSound = Gdx.audio.newSound(Gdx.files.internal("select.wav"));
 		stage = new Stage();
@@ -63,17 +66,17 @@ public class GameOver implements Screen{
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		camera.update();
 		stage.act(delta);
 		stage.draw();
 		game.batch.setProjectionMatrix(camera.combined);
 		game.batch.begin();
-		white.draw(game.batch, "You evaded " + GOdodges + " possible deaths", 20, 520);
-		white.draw(game.batch, "Highscore: " + pidPrefs.getHighscore(), 20, 490);
-		white.draw(game.batch, "You gained " + GOxpgained + " xp", 20, 400);
-		white.draw(game.batch,"You need " + Leveler.getNeeded() + " xp until next rank-up", 20, 370);
-        white.draw(game.batch, "You current rank is " + pidPrefs.getRank(), 20, 340);
+		white.draw(game.batch, "You evaded " + GOdodges + " possible deaths", 0.025f * MYwidth, MYheight * 0.36562502f);
+		white.draw(game.batch, "Highscore: " + pidPrefs.getHighscore(), 0.025f * MYwidth, MYheight * 0.34453127f);
+		white.draw(game.batch, "You gained " + GOxpgained + " xp", 0.025f * MYwidth, MYheight * 0.28125f);
+		white.draw(game.batch,"You need " + Leveler.getNeeded() + " xp until next rank-up", 0.025f * MYwidth, MYheight * 0.26015627f);
+        white.draw(game.batch, "You current rank is " + pidPrefs.getRank(), 0.025f * MYwidth, MYheight * 0.2390625f);
 		game.batch.end();
 	}
 

@@ -89,6 +89,10 @@ public class NormalMode extends MainGameScreen{
 		{
 			colorChange();
 		}
+		if (TimeUtils.millis() - lastani > animillis)
+		{
+			changeTextureSize();
+		}
 	}
 	
 	public void moveCollision() {

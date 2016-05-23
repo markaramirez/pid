@@ -62,33 +62,30 @@ public class LightningMode extends MainGameScreen{
 	}
 
 	public void nicemethod() {
-		if (TimeUtils.millis() - lastAlienTime > alien1millls)
-		{
+		if (TimeUtils.millis() - lastAlienTime > alien1millls) {
 			spawnAlien();
 		}
-		if (TimeUtils.millis() - la2t > a2millls)
-		{
+		if (TimeUtils.millis() - la2t > a2millls) {
 			spawnAlien2();
 		}
-		if (TimeUtils.millis() - la3t > a3millls)
-		{
+		if (TimeUtils.millis() - la3t > a3millls) {
 			spawnAlien3();
 		}
-		if (TimeUtils.millis() - lak1t > ak1millls)
-		{
+		if (TimeUtils.millis() - lak1t > ak1millls) {
 			spawnAk1();
 		}
-		if (TimeUtils.millis() - lak2t > ak2millls)
-		{
+		if (TimeUtils.millis() - lak2t > ak2millls) {
 			spawnAk2();
 		}
-		if (TimeUtils.millis() - lak3t > ak3millls)
-		{
+		if (TimeUtils.millis() - lak3t > ak3millls) {
 			spawnAk3();
 		}
-		if (TimeUtils.millis() - lastColorChange > 50)
-		{
+		if (TimeUtils.millis() - lastColorChange > 50) {
 			colorChange();
+		}
+		if (TimeUtils.millis() - lastani > animillis)
+		{
+			changeTextureSize();
 		}
 	}
 	

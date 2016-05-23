@@ -20,13 +20,12 @@ public class MainGameScreen implements Screen
 	// --- Use the newly implemented ortho camera with virtual viewport. --- //
     //OrthographicCameraWithVirtualViewport camera;
     //MultipleVirtualViewportBuilder multipleVirtualViewportBuilder;
-
 	Rectangle ship;
 	Array<Rectangle> aliens, aliens2, aliens3, aks1, aks2, aks3;
 	long lastAlienTime, la2t, la3t, lak1t, lak2t, lak3t;
 	long lastColorChange;
 	int dodges;
-	long alien1millls, a2millls, a3millls, ak1millls, ak2millls, ak3millls;
+	long alien1millls, a2millls, a3millls, ak1millls, ak2millls, ak3millls, lastani, animillis;
 	float r1;
 	int lives;
 	int coins;
@@ -34,10 +33,9 @@ public class MainGameScreen implements Screen
 	BitmapFont white;
 	Music creep2000;
 	Vector3 touchPos = new Vector3();
-
     Viewport viewport;
-
     float WORLD_WIDTH, WORLD_HEIGHT, assetSize, textureSize;
+    boolean flip;
  
 	public MainGameScreen(final TIDS gam, OrthographicCameraWithVirtualViewport cam) {
 		camera = cam;
@@ -56,7 +54,9 @@ public class MainGameScreen implements Screen
 		creep2000 = Gdx.audio.newMusic(Gdx.files.internal("PIDv.1.wav"));
 		creep2000.setLooping(true);
 		white = new BitmapFont(Gdx.files.internal("white.fnt"));
-
+        lastani = TimeUtils.millis();
+        animillis = 500;
+        flip = false;
         // --- Created the virtual viewport to add to camera --- //
         //multipleVirtualViewportBuilder = new MultipleVirtualViewportBuilder(800, 480, 854, 600);
         //VirtualViewport virtualViewport = multipleVirtualViewportBuilder.getVirtualViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -168,6 +168,17 @@ public class MainGameScreen implements Screen
 			aks3.add(ak3);
 		}
 		lak3t = TimeUtils.millis();
+	}
+
+	protected void changeTextureSize(){
+		if(flip){
+			textureSize = WORLD_WIDTH * .1f;
+		}
+		else {
+			textureSize = WORLD_WIDTH * .12f;
+		}
+		flip = !flip;
+		lastani = TimeUtils.millis();
 	}
 
 	@Override
