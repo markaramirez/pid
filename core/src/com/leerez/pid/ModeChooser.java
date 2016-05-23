@@ -1,6 +1,7 @@
 package com.leerez.pid;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -213,7 +214,6 @@ public class ModeChooser implements Screen{
             spawnAlien();
         }
 		stage.draw();
-
         camera.update();
         game.batch.setProjectionMatrix(camera.combined);
         game.batch.begin();
