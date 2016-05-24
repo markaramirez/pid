@@ -15,7 +15,12 @@ public class LightningMode extends MainGameScreen {
     }
 
     private void colorChange() {
-        r1 -= .001;
+        System.out.println(alien1millls);
+        System.out.println(a2millls);
+        System.out.println(a3millls);
+        r1 -= .00125; //was .001
+        System.out.println("ospeed" + ospeed);
+        if(ospeed < 1800) ospeed += .1;
         if (ak1millls >= 5600) {
             ak1millls -= .00005;
             ak2millls -= .00002;
@@ -31,24 +36,24 @@ public class LightningMode extends MainGameScreen {
             ak3millls = 1500;
         }
         if (alien1millls < 330) {
-            alien1millls = 290;
-            a2millls = 490;
-            a3millls = 390;
+            alien1millls = 180; //was 290
+            a2millls = 380; //was 490
+            a3millls = 280; //was 390
         }
-        if (alien1millls <= 475 && alien1millls > 330) {
-            alien1millls -= .005;
-            a2millls -= .002;
-            a3millls -= .008;
+        if (alien1millls <= 475 && alien1millls >= 330) {
+            alien1millls -= .01; //was.005
+            a2millls -= .007; //.002
+            a3millls -= .013; //008
         }
         if (alien1millls <= 600 && alien1millls > 475) {
-            alien1millls -= .01;
-            a2millls -= .01;
-            a3millls -= .01;
+            alien1millls -= .015;
+            a2millls -= .015;
+            a3millls -= .015;
         }
         if (alien1millls > 600) {
-            alien1millls -= .035;
-            a2millls -= .037;
-            a3millls -= .032;
+            alien1millls -= .2; //.04
+            a2millls -= .2; //.042
+            a3millls -= .2; //.037
         }
         lastColorChange = TimeUtils.millis();
     }
@@ -75,8 +80,15 @@ public class LightningMode extends MainGameScreen {
         if (TimeUtils.millis() - lastColorChange > 50) {
             colorChange();
         }
-        if (TimeUtils.millis() - lastani > animillis) {
-            changeTextureSize();
+        if(flip) {
+            if (TimeUtils.millis() - lastani > animillis) {
+                changeTextureSize();
+            }
+        }
+        else {
+            if (TimeUtils.millis() - lastani > animillis * 3) {
+                changeTextureSize();
+            }
         }
     }
 
@@ -84,7 +96,7 @@ public class LightningMode extends MainGameScreen {
         Iterator<Rectangle> iter = aliens.iterator();
         while (iter.hasNext()) {
             Rectangle alien = iter.next();
-            alien.y -= 900 * Gdx.graphics.getDeltaTime();
+            alien.y -= 980 * Gdx.graphics.getDeltaTime();
             if (alien.y + assetSize < 0) {
                 iter.remove();
                 dodges++;
@@ -98,7 +110,15 @@ public class LightningMode extends MainGameScreen {
         Iterator<Rectangle> iter2 = aliens2.iterator();
         while (iter2.hasNext()) {
             Rectangle alien2 = iter2.next();
-            alien2.y -= 940 * Gdx.graphics.getDeltaTime();
+            alien2.y -= 980 * Gdx.graphics.getDeltaTime();
+            if(right1) alien2.x += 1000 * Gdx.graphics.getDeltaTime();
+            if(!right1) alien2.x -= 1000 * Gdx.graphics.getDeltaTime();
+            if(alien2.x + assetSize > WORLD_WIDTH) {
+                right1 = false;
+            }
+            if(alien2.x <= 0) {
+                right1 = true;
+            }
             if (alien2.y + assetSize < 0) {
                 iter2.remove();
                 dodges++;
@@ -112,7 +132,7 @@ public class LightningMode extends MainGameScreen {
         Iterator<Rectangle> iter3 = aliens3.iterator();
         while (iter3.hasNext()) {
             Rectangle alien3 = iter3.next();
-            alien3.y -= 980 * Gdx.graphics.getDeltaTime();
+            alien3.y -= ospeed * Gdx.graphics.getDeltaTime();
             if (alien3.y + assetSize < 0) {
                 iter3.remove();
                 dodges++;
@@ -189,11 +209,12 @@ public class LightningMode extends MainGameScreen {
         }
         if (ship.x < 0)
             ship.x = 0;
-        if (ship.x > WORLD_WIDTH - textureSize)
-            ship.x = WORLD_WIDTH - textureSize;
-        alien1millls = 750;
-        a2millls = 800;
-        a3millls = 850;
+        if (ship.x > WORLD_WIDTH - playerTextureSize)
+            ship.x = WORLD_WIDTH - playerTextureSize;
+        //why did I have these three lines?
+        //alien1millls = 750;
+        //a2millls = 800;
+        //a3millls = 850;
         nicemethod();
         moveCollision();
         if (lives <= 0) {
@@ -205,7 +226,7 @@ public class LightningMode extends MainGameScreen {
         game.batch.setProjectionMatrix(camera.combined);
         game.batch.begin();
         white.draw(game.batch, "Dodges: " + dodges, 0, WORLD_HEIGHT - 10);
-        game.batch.draw(shipImage, ship.x, ship.y, textureSize, textureSize);
+        game.batch.draw(shipImage, ship.x, ship.y, playerTextureSize, playerTextureSize);
         for (Rectangle alien : aliens) {
             game.batch.draw(alienImage, alien.x, alien.y, textureSize, textureSize);
         }
@@ -222,7 +243,7 @@ public class LightningMode extends MainGameScreen {
             game.batch.draw(killer2Image, ak2.x, ak2.y, textureSize, textureSize);
         }
         for (Rectangle ak3 : aks3) {
-            game.batch.draw(killer3Image, ak3.x, ak3.y, textureSize, textureSize);
+                game.batch.draw(killer3Image, ak3.x, ak3.y, textureSize, textureSize);
         }
         game.batch.end();
     }

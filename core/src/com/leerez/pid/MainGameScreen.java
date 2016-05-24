@@ -33,8 +33,9 @@ public class MainGameScreen implements Screen {
     Music creep2000;
     Vector3 touchPos = new Vector3();
     Viewport viewport;
-    float WORLD_WIDTH, WORLD_HEIGHT, assetSize, textureSize;
-    boolean flip;
+    float WORLD_WIDTH, WORLD_HEIGHT, assetSize, textureSize, playerTextureSize;
+    boolean flip, right1;
+    int ospeed;
 
     public MainGameScreen(final TIDS gam, OrthographicCameraWithVirtualViewport cam) {
         camera = cam;
@@ -42,6 +43,7 @@ public class MainGameScreen implements Screen {
         WORLD_HEIGHT = camera.virtualViewport.getHeight();
         assetSize = WORLD_WIDTH * .08f;
         textureSize = WORLD_WIDTH * .1f;
+        playerTextureSize = WORLD_WIDTH * .1f;
         this.game = gam;
         shipImage = new Texture(Gdx.files.internal("markship.png"));
         alienImage = new Texture(Gdx.files.internal("markalien.png"));
@@ -54,18 +56,18 @@ public class MainGameScreen implements Screen {
         creep2000.setLooping(true);
         white = new BitmapFont(Gdx.files.internal("white.fnt"));
         lastani = TimeUtils.millis();
-        animillis = 500;
+        animillis = 250;
         flip = false;
+        right1 = true;
+        ospeed = 1300;
         // --- Created the virtual viewport to add to camera --- //
         //multipleVirtualViewportBuilder = new MultipleVirtualViewportBuilder(800, 480, 854, 600);
         //VirtualViewport virtualViewport = multipleVirtualViewportBuilder.getVirtualViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         //camera = new OrthographicCamera(WORLD_WIDTH, WORLD_HEIGHT);
         //camera = new OrthographicCameraWithVirtualViewport(virtualViewport);
-
         //camera.translate(camera.viewportWidth/2, camera.viewportHeight/2);
         //viewport = new FillViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
         //viewport.apply();
-
         ship = new Rectangle();
         ship.x = WORLD_WIDTH / 2 - (assetSize / 2);
         ship.y = 20;
