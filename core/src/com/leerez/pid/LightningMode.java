@@ -18,9 +18,12 @@ public class LightningMode extends MainGameScreen {
         System.out.println(alien1millls);
         System.out.println(a2millls);
         System.out.println(a3millls);
-        r1 -= .00125; //was .001
+        r1 -= .0005; //was .001
         System.out.println("ospeed" + ospeed);
-        if(ospeed < 1800) ospeed += .1;
+        if(ospeed < 1800) {
+            ospeed += .1;
+        }
+        System.out.println("ospeed" + ospeed);
         if (ak1millls >= 5600) {
             ak1millls -= .00005;
             ak2millls -= .00002;
@@ -77,7 +80,7 @@ public class LightningMode extends MainGameScreen {
         if (TimeUtils.millis() - lak3t > ak3millls) {
             spawnAk3();
         }
-        if (TimeUtils.millis() - lastColorChange > 50) {
+        if (TimeUtils.millis() - lastColorChange > 10) {
             colorChange();
         }
         if(flip) {
@@ -86,7 +89,7 @@ public class LightningMode extends MainGameScreen {
             }
         }
         else {
-            if (TimeUtils.millis() - lastani > animillis * 3) {
+            if (TimeUtils.millis() - lastani > animillis * 5) {
                 changeTextureSize();
             }
         }
@@ -211,10 +214,6 @@ public class LightningMode extends MainGameScreen {
             ship.x = 0;
         if (ship.x > WORLD_WIDTH - playerTextureSize)
             ship.x = WORLD_WIDTH - playerTextureSize;
-        //why did I have these three lines?
-        //alien1millls = 750;
-        //a2millls = 800;
-        //a3millls = 850;
         nicemethod();
         moveCollision();
         if (lives <= 0) {

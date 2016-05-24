@@ -56,7 +56,7 @@ public class MainGameScreen implements Screen {
         creep2000.setLooping(true);
         white = new BitmapFont(Gdx.files.internal("white.fnt"));
         lastani = TimeUtils.millis();
-        animillis = 250;
+        animillis = 150;
         flip = false;
         right1 = true;
         ospeed = 1300;
