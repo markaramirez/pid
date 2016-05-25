@@ -87,7 +87,7 @@ public class MainMenu implements Screen {
         LabelStyle headingStyle = new LabelStyle(bigger, Color.WHITE);
         heading = new Label("PLUMMET\nINTO\nDARKNESS", headingStyle);
         buttonQuit = new TextButton("QUIT", textButtonStyle);
-        buttonQuit.pad(25);
+        buttonQuit.pad(50);
         buttonQuit.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -98,7 +98,7 @@ public class MainMenu implements Screen {
             }
         });
         buttonPlay = new TextButton("PLAY", textButtonStyle);
-        buttonPlay.pad(25);
+        buttonPlay.pad(50);
         buttonPlay.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -110,7 +110,7 @@ public class MainMenu implements Screen {
             }
         });
         buttonManual = new TextButton("HOW TO PLAY", textButtonStyle);
-        buttonManual.pad(25);
+        buttonManual.pad(50);
         buttonManual.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -121,7 +121,7 @@ public class MainMenu implements Screen {
             }
         });
         buttonSettings = new TextButton("SETTINGS", textButtonStyle);
-        buttonSettings.pad(25);
+        buttonSettings.pad(50);
         buttonSettings.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {

@@ -5,17 +5,18 @@ import java.util.Iterator;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.TimeUtils;
 
-public class    LightningMode extends MainGameScreen {
+public class HorizontalMode extends MainGameScreen {
 
-    public LightningMode(TIDS gam, OrthographicCameraWithVirtualViewport cam) {
+    public HorizontalMode(TIDS gam, OrthographicCameraWithVirtualViewport cam) {
         super(gam, cam);
     }
 
     private void colorChange() {
-        r1 -= .005;
+        r1 -= .00125;
         blockmillis = 100;
         lastColorChange = TimeUtils.millis();
     }
@@ -27,12 +28,11 @@ public class    LightningMode extends MainGameScreen {
         if (TimeUtils.millis() - lastColorChange > 50) {
             colorChange();
         }
-        if(flip) {
+        if (flip) {
             if (TimeUtils.millis() - lastani > animillis) {
                 changeTextureSize();
             }
-        }
-        else {
+        } else {
             if (TimeUtils.millis() - lastani > animillis * 5) {
                 changeTextureSize();
             }
@@ -43,10 +43,11 @@ public class    LightningMode extends MainGameScreen {
         Iterator<Block> iter = blocks.iterator();
         while (iter.hasNext()) {
             Block block = iter.next();
-            block.hitbox.y -= block.yspeed * 1.2* Gdx.graphics.getDeltaTime();
-            block.xspeed = 0;
+            block.hitbox.y -= block.yspeed * 1.1 * Gdx.graphics.getDeltaTime();
+            block.xspeed = MathUtils.random(900, 1800);
+            if(MathUtils.random(1, 2) == 1) block.xspeed *= -1;
             block.hitbox.x += block.xspeed * Gdx.graphics.getDeltaTime();
-            if(block.hitbox.x + assetSize > WORLD_WIDTH || block.hitbox.x <= 0) {
+            if (block.hitbox.x + assetSize > WORLD_WIDTH || block.hitbox.x <= 0) {
                 block.xspeed *= -1;
             }
             if (block.hitbox.y + assetSize < 0) {
@@ -54,12 +55,11 @@ public class    LightningMode extends MainGameScreen {
                 dodges++;
             }
             if (block.hitbox.overlaps(you)) {
-                if(block.killer) {
+                if (block.killer) {
                     iter.remove();
                     blocks.clear();
                     xpgained += 5;
-                }
-                else {
+                } else {
                     Gdx.input.vibrate(500);
                     iter.remove();
                     lives--;
@@ -107,11 +107,11 @@ public class    LightningMode extends MainGameScreen {
         game.batch.begin();
         white.draw(game.batch, "Dodges: " + dodges, 0, WORLD_HEIGHT - 10);
         game.batch.draw(youImage, you.x, you.y, playerTextureSize, playerTextureSize);
-        for (Block block: blocks) {
-            if(block.color == 1) blockImage = redImage;
-            if(block.color == 2) blockImage = blueImage;
-            if(block.color == 3) blockImage = orangeImage;
-            if(block.color == 4) blockImage = killerImage;
+        for (Block block : blocks) {
+            if (block.color == 1) blockImage = redImage;
+            if (block.color == 2) blockImage = blueImage;
+            if (block.color == 3) blockImage = orangeImage;
+            if (block.color == 4) blockImage = killerImage;
             game.batch.draw(blockImage, block.hitbox.x, block.hitbox.y, textureSize, textureSize);
         }
         game.batch.end();

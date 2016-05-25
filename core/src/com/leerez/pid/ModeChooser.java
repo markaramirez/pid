@@ -75,8 +75,8 @@ public class ModeChooser implements Screen {
         LabelStyle headingStyle = new LabelStyle(bigger, Color.WHITE);
         LabelStyle heading2Style = new LabelStyle(white, Color.WHITE);
         heading = new Label("Choose a journey", headingStyle);
-        GSL = new Label("Constant Motion.", heading2Style);//button
-        GS2L = new Label("Complete Control.", heading2Style);//classic
+        GSL = new Label("A Constant Pain.", heading2Style);//all horizontal blocks
+        GS2L = new Label("A Steady Descent", heading2Style);//classic
         GS3L = new Label("A Speedy Departure.", heading2Style);//lightning
         GS4L = new Label("No Help.", heading2Style);//no killers
         ur1 = new Label("Unlocked at Rank 1", heading2Style);//classic
@@ -85,7 +85,7 @@ public class ModeChooser implements Screen {
         ur4 = new Label("Unlocked at Rank 5.", heading2Style);//no killers
         heading.setBounds(0, Gdx.graphics.getHeight() - 100, 300, 100);
         buttonGS = new TextButton("Into the Void", textButtonStyle);
-        buttonGS.pad(25);
+        buttonGS.pad(50);
         buttonGS.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -93,25 +93,25 @@ public class ModeChooser implements Screen {
                     selectSound.play();
                 }
                 if (pidPrefs.getRank() >= 3) {
-                    //game.setScreen(new ButtonMode(game, camera));
+                    game.setScreen(new HorizontalMode(game, camera));
                 }
                 dispose();
             }
         });
         buttonGS2 = new TextButton("Into the Darkness", textButtonStyle);
-        buttonGS2.pad(25);
+        buttonGS2.pad(50);
         buttonGS2.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (pidPrefs.getSoundPref()) {
                     selectSound.play();
                 }
-                //game.setScreen(new NormalMode(game, camera));
+                game.setScreen(new NormalMode(game, camera));
                 dispose();
             }
         });
         buttonL = new TextButton("Into the Abyss", textButtonStyle);
-        buttonL.pad(25);
+        buttonL.pad(50);
         buttonL.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -123,7 +123,7 @@ public class ModeChooser implements Screen {
             }
         });
         buttonE = new TextButton("Into the Emptiness", textButtonStyle);
-        buttonE.pad(25);
+        buttonE.pad(50);
         buttonE.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {

@@ -58,6 +58,7 @@ public class MainGameScreen implements Screen {
         //viewport = new FillViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
         //viewport.apply();
         blocks = new Array<Block>();
+        blockmillis = 425;
         you = new Rectangle();
         you.x = WORLD_WIDTH / 2 - (assetSize / 2);
         you.y = 20;
