@@ -43,12 +43,12 @@ public class MainMenu implements Screen {
     public BitmapFont white, bigger;
     public Label heading, rank;
     public Table table;
-    Texture alienImage;
-    Array<Rectangle> aliens;
+    Texture blockImage;
+    Array<Rectangle> blocks;
     Sound selectSound;
     Music mmdrone;
     TextButton buttonManual, buttonPlay, buttonQuit, buttonSettings;
-    long lastAlienTime;
+    long lastBlockTime;
     OrthographicCameraWithVirtualViewport camera;
     float assetSize, textureSize;
     float MYwidth, MYheight;
@@ -67,9 +67,9 @@ public class MainMenu implements Screen {
         selectSound = Gdx.audio.newSound(Gdx.files.internal("select.wav"));
         mmdrone = Gdx.audio.newMusic(Gdx.files.internal("PIDmm.wav"));
         //falling red blocks
-        aliens = new Array<Rectangle>();
-        alienImage = new Texture(Gdx.files.internal("markalien.png"));
-        spawnAlien();
+        blocks = new Array<Rectangle>();
+        blockImage = new Texture(Gdx.files.internal("red.png"));
+        spawnBlock();
         //end that stuff
         mmdrone.setLooping(true);
         mmdrone.setVolume(.25f);
@@ -117,7 +117,7 @@ public class MainMenu implements Screen {
                 if (pidPrefs.getSoundPref()) {
                     selectSound.play();
                 }
-                game.setScreen(new Test(game));
+                //game.setScreen(new Test(game));
             }
         });
         buttonSettings = new TextButton("SETTINGS", textButtonStyle);
@@ -148,14 +148,14 @@ public class MainMenu implements Screen {
         stage.addActor(table);
     }
 
-    private void spawnAlien() {
-        Rectangle alien = new Rectangle();
-        alien.x = MathUtils.random(0, MYwidth - assetSize);
-        alien.y = MYheight + 100;
-        alien.width = assetSize;
-        alien.height = assetSize;
-        aliens.add(alien);
-        lastAlienTime = TimeUtils.millis();
+    private void spawnBlock() {
+        Rectangle block = new Rectangle();
+        block.x = MathUtils.random(0, MYwidth - assetSize);
+        block.y = MYheight + 100;
+        block.width = assetSize;
+        block.height = assetSize;
+        blocks.add(block);
+        lastBlockTime = TimeUtils.millis();
     }
 
     @Override
@@ -163,16 +163,16 @@ public class MainMenu implements Screen {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act(delta);
-        Iterator<Rectangle> iter = aliens.iterator();
+        Iterator<Rectangle> iter = blocks.iterator();
         while (iter.hasNext()) {
-            Rectangle alien = iter.next();
-            alien.y -= 450 * Gdx.graphics.getDeltaTime();
-            if (alien.y + assetSize < 0) {
+            Rectangle block = iter.next();
+            block.y -= 450 * Gdx.graphics.getDeltaTime();
+            if (block.y + assetSize < 0) {
                 iter.remove();
             }
         }
-        if (TimeUtils.millis() - lastAlienTime > 1500) {
-            spawnAlien();
+        if (TimeUtils.millis() - lastBlockTime > 1500) {
+            spawnBlock();
         }
         stage.draw();
 
@@ -182,8 +182,8 @@ public class MainMenu implements Screen {
         white.draw(game.batch, "Rank: " + pidPrefs.getRank(), MYwidth - (MYwidth * .99f), MYheight);
         white.draw(game.batch, "Total XP: " + pidPrefs.getXP(), MYwidth - (MYwidth * .99f), MYheight - (MYheight * (1 - 0.9789063f)));
         white.draw(game.batch, "XP until next rank-up: " + Leveler.getNeeded(), MYwidth - (MYwidth * .99f), MYheight - (MYheight * (1 - 0.9578125f)));
-        for (Rectangle alien : aliens) {
-            game.batch.draw(alienImage, alien.x, alien.y, textureSize, textureSize);
+        for (Rectangle block : blocks) {
+            game.batch.draw(blockImage, block.x, block.y, textureSize, textureSize);
         }
         game.batch.end();
     }
