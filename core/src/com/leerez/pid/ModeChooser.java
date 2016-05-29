@@ -239,12 +239,12 @@ public class ModeChooser implements Screen {
         table.add(GS4L);
         table.row();
         table.add(ur4);
-        table.getCell(ur4).spaceBottom(170);
+        table.getCell(buttonE3).spaceBottom(170);
         scroll  = new ScrollPane(table);
         screen = new Table(skin);
         screen.setFillParent(true);
         screen.setPosition(0, -150);
-        screen.add(scroll);
+        screen.add(scroll).fill().expand();
         stage.addActor(heading);
         stage.addActor(screen);
         stage.addActor(buttonBack);

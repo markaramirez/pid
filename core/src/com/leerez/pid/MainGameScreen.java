@@ -98,7 +98,7 @@ public class MainGameScreen implements Screen {
 
     protected void spawnBullet() {
         Rectangle bullet = new Rectangle();
-        bullet.x = you.x + assetSize / 2;
+        bullet.x = you.x + assetSize / 2 - bulletSize / 2;
         bullet.y = you.y + assetSize / 2;
         bullet.width = bulletSize;
         bullet.height = bulletSize;

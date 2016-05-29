@@ -17,6 +17,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -47,7 +48,7 @@ public class MainMenu implements Screen {
     Array<Rectangle> blocks;
     Sound selectSound;
     Music mmdrone;
-    TextButton buttonManual, buttonPlay, buttonQuit, buttonSettings;
+    TextButton buttonPlay, buttonQuit;
     long lastBlockTime;
     OrthographicCameraWithVirtualViewport camera;
     float assetSize, textureSize;
@@ -109,26 +110,11 @@ public class MainMenu implements Screen {
                 dispose();
             }
         });
-        buttonSettings = new TextButton("SETTINGS", textButtonStyle);
-        buttonSettings.pad(50);
-        buttonSettings.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (pidPrefs.getSoundPref()) {
-                    selectSound.play();
-                }
-                game.setScreen(new Settings(game, camera));
-                dispose();
-            }
-        });
         table.add(heading).left();
         table.getCell(heading).spaceBottom(100);
         table.row();
         table.add(buttonPlay);
         table.getCell(buttonPlay).spaceBottom(15);
-        table.row();
-        table.add(buttonSettings);
-        table.getCell(buttonSettings).spaceBottom(15);
         table.row();
         table.add(buttonQuit);
         stage.addActor(table);
