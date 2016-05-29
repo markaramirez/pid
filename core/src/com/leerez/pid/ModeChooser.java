@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -37,12 +38,13 @@ public class ModeChooser implements Screen {
     public Skin skin;
     public BitmapFont white, bigger;
     public Label heading, GSL, GS2L, GS3L, GS4L, ur1, ur2, ur3, ur4;
-    public Table table;
+    public Table table, screen;
     Texture blockImage;
+    ScrollPane scroll;
     Array<Rectangle> blocks;
     Sound selectSound;
     long lastBlockTime;
-    TextButton buttonGS, buttonGS2, buttonBack, buttonL, buttonE;
+    TextButton buttonGS, buttonGS2, buttonBack, buttonL, buttonE, buttonE1, buttonE2, buttonE3;
     OrthographicCameraWithVirtualViewport camera;
     float MYwidth, MYheight, assetSize, textureSize;
 
@@ -53,7 +55,7 @@ public class ModeChooser implements Screen {
         MYheight = camera.virtualViewport.getHeight();
         assetSize = MYwidth * .08f;
         textureSize = MYwidth * .1f;
-        stage = new Stage(new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+        stage = new Stage();
         Gdx.input.setInputProcessor(stage);
         white = new BitmapFont(Gdx.files.internal("white.fnt"));
         bigger = new BitmapFont(Gdx.files.internal("bigger.fnt"));
@@ -136,6 +138,48 @@ public class ModeChooser implements Screen {
                 dispose();
             }
         });
+        buttonE1 = new TextButton("Into the Struggle", textButtonStyle);
+        buttonE1.pad(50);
+        buttonE1.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (pidPrefs.getSoundPref()) {
+                    selectSound.play();
+                }
+                if (pidPrefs.getRank() >= 5) {
+                    game.setScreen(new HopeMode(game, camera));
+                }
+                dispose();
+            }
+        });
+        buttonE2 = new TextButton("Into the Emptiness", textButtonStyle);
+        buttonE2.pad(50);
+        buttonE2.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (pidPrefs.getSoundPref()) {
+                    selectSound.play();
+                }
+                if (pidPrefs.getRank() >= 5) {
+                    game.setScreen(new LeftRightMode(game, camera));
+                }
+                dispose();
+            }
+        });
+        buttonE3 = new TextButton("Into the Emptiness", textButtonStyle);
+        buttonE3.pad(50);
+        buttonE3.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (pidPrefs.getSoundPref()) {
+                    selectSound.play();
+                }
+                if (pidPrefs.getRank() >= 5) {
+                    game.setScreen(new LeftRightMode(game, camera));
+                }
+                dispose();
+            }
+        });
         buttonBack = new TextButton("Back", textButtonStyle);
         buttonBack.setBounds(0, 0, 125, 100);
         buttonBack.addListener(new ClickListener() {
@@ -174,9 +218,35 @@ public class ModeChooser implements Screen {
         table.add(GS4L);
         table.row();
         table.add(ur4);
-        table.getCell(ur4).spaceBottom(280);
-        stage.addActor(table);
+        table.getCell(ur4).spaceBottom(170);
+        table.row();
+        table.add(buttonE1);
+        table.row();
+        table.add(GS4L);
+        table.row();
+        table.add(ur4);
+        table.getCell(ur4).spaceBottom(170);
+        table.row();
+        table.add(buttonE2);
+        table.row();
+        table.add(GS4L);
+        table.row();
+        table.add(ur4);
+        table.getCell(ur4).spaceBottom(170);
+        table.row();
+        table.add(buttonE3);
+        table.row();
+        table.add(GS4L);
+        table.row();
+        table.add(ur4);
+        table.getCell(ur4).spaceBottom(170);
+        scroll  = new ScrollPane(table);
+        screen = new Table(skin);
+        screen.setFillParent(true);
+        screen.setPosition(0, -150);
+        screen.add(scroll);
         stage.addActor(heading);
+        stage.addActor(screen);
         stage.addActor(buttonBack);
     }
 
