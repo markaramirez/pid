@@ -8,17 +8,18 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.TimeUtils;
 
-public class NormalMode extends MainGameScreen {
+public class LeftRightMode extends MainGameScreen {
 
-    public NormalMode(TIDS gam, OrthographicCameraWithVirtualViewport cam) {
+    boolean goRight = false;
+    int score = 0;
+
+    public LeftRightMode(TIDS gam, OrthographicCameraWithVirtualViewport cam) {
         super(gam, cam);
     }
 
     private void colorChange() {
-        r1 -= .00125;
-        if (blockmillis > 100 && blockmillis < 300) blockmillis -= .85;
-        if (blockmillis >= 300) blockmillis--;
-        System.out.println(blockmillis);
+        r1 -= .005;
+        blockmillis = 150;
         lastColorChange = TimeUtils.millis();
     }
 
@@ -44,14 +45,14 @@ public class NormalMode extends MainGameScreen {
         Iterator<Block> iter = blocks.iterator();
         while (iter.hasNext()) {
             Block block = iter.next();
-            block.hitbox.y -= block.yspeed * Gdx.graphics.getDeltaTime();
+            block.hitbox.y -= block.yspeed * 1.2 * Gdx.graphics.getDeltaTime();
+            block.xspeed = 0;
             block.hitbox.x += block.xspeed * Gdx.graphics.getDeltaTime();
             if (block.hitbox.x + assetSize > WORLD_WIDTH || block.hitbox.x <= 0) {
                 block.xspeed *= -1;
             }
             if (block.hitbox.y + assetSize < 0) {
                 iter.remove();
-                dodges++;
             }
             if (block.hitbox.overlaps(you)) {
                 if (block.killer) {
@@ -68,12 +69,12 @@ public class NormalMode extends MainGameScreen {
     }
 
     public void dieMethod() {
-        GameOver.GOdodges = dodges;
-        GameOver.showScore = false;
+        GameOver.GOscore = score;
+        GameOver.showScore = true;
         if (dodges > pidPrefs.getHighscore()) {
             pidPrefs.setHighscore(dodges);
         }
-        xpgained += dodges / 2;
+        xpgained += score * 2;
         GameOver.GOxpgained = xpgained;
         pidPrefs.setXP(pidPrefs.getXP() + xpgained);
         Leveler.updateRank();
@@ -91,10 +92,16 @@ public class NormalMode extends MainGameScreen {
             else
                 you.x += 1000 * Gdx.graphics.getDeltaTime();
         }
-        if (you.x < 0)
+        if (you.x < 0) {
             you.x = 0;
-        if (you.x > WORLD_WIDTH - playerTextureSize)
+            if(!goRight) score++;
+            goRight = true;
+        }
+        if (you.x > WORLD_WIDTH - playerTextureSize) {
             you.x = WORLD_WIDTH - playerTextureSize;
+            if(goRight) score++;
+            goRight = false;
+        }
         timeUpdate();
         moveCollision();
         if (lives <= 0) {
@@ -105,7 +112,7 @@ public class NormalMode extends MainGameScreen {
         camera.update();
         game.batch.setProjectionMatrix(camera.combined);
         game.batch.begin();
-        white.draw(game.batch, "Dodges: " + dodges, 0, WORLD_HEIGHT - 10);
+        white.draw(game.batch, "Score: " + score, 0, WORLD_HEIGHT - 10);
         game.batch.draw(youImage, you.x, you.y, playerTextureSize, playerTextureSize);
         for (Block block : blocks) {
             if (block.color == 1) blockImage = redImage;

@@ -13,15 +13,16 @@ public class Block {
     Rectangle hitbox;
 
     public Block() {
-        killer = MathUtils.random(1, 40)==1;
-        horizontal = MathUtils.random(1, 5)==1;
-        if(horizontal) {
+        killer = MathUtils.random(1, 40) == 1;
+        horizontal = MathUtils.random(1, 5) == 1;
+        if (horizontal) {
             xspeed = MathUtils.random(900, 1500);
-            if(MathUtils.random(1, 2) == 1) xspeed *= -1;
+            if (MathUtils.random(1, 2) == 1) xspeed *= -1;
         }
         yspeed = MathUtils.random(900, 1300);
         color = MathUtils.random(1, 3);
-        if(killer) color = 4;
+        if (killer) color = 4;
         hitbox = new Rectangle();
     }
+
 }

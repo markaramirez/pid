@@ -17,18 +17,17 @@ public class MainGameScreen implements Screen {
     Texture youImage, redImage, blueImage, orangeImage, killerImage, blockImage;
     OrthographicCameraWithVirtualViewport camera;
     // --- Use the newly implemented ortho camera with virtual viewport. --- //
-    //OrthographicCameraWithVirtualViewport camera;
     //MultipleVirtualViewportBuilder multipleVirtualViewportBuilder;
     Rectangle you;
     Array<Block> blocks;
-    long lastBlockTime, lastColorChange, lastani;
+    Array<Rectangle> bullets;
+    long lastBlockTime, lastColorChange, lastani, lastBulletTime;
     int dodges ,lives, coins, xpgained;
     float blockmillis, animillis, r1;
     BitmapFont white;
     Music creep2000;
     Vector3 touchPos = new Vector3();
-    Viewport viewport;
-    float WORLD_WIDTH, WORLD_HEIGHT, assetSize, textureSize, playerTextureSize;
+    float WORLD_WIDTH, WORLD_HEIGHT, assetSize, textureSize, playerTextureSize, bulletSize, bulletTSize;
     boolean flip;
 
     public MainGameScreen(final TIDS gam, OrthographicCameraWithVirtualViewport cam) {
@@ -36,6 +35,8 @@ public class MainGameScreen implements Screen {
         WORLD_WIDTH = camera.virtualViewport.getWidth();
         WORLD_HEIGHT = camera.virtualViewport.getHeight();
         assetSize = WORLD_WIDTH * .08f;
+        bulletSize = WORLD_WIDTH * .02f;
+        bulletTSize = WORLD_WIDTH * .03f;
         textureSize = WORLD_WIDTH * .1f;
         playerTextureSize = WORLD_WIDTH * .1f;
         this.game = gam;
@@ -58,6 +59,7 @@ public class MainGameScreen implements Screen {
         //viewport = new FillViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
         //viewport.apply();
         blocks = new Array<Block>();
+        bullets = new Array<Rectangle>();
         blockmillis = 425;
         you = new Rectangle();
         you.x = WORLD_WIDTH / 2 - (assetSize / 2);
@@ -79,6 +81,29 @@ public class MainGameScreen implements Screen {
         block.hitbox.height = assetSize;
         blocks.add(block);
         lastBlockTime = TimeUtils.millis();
+    }
+
+    protected void spawnHBlock() {
+        Block block = new Block();
+        block.horizontal = true;
+        block.xspeed = MathUtils.random(900, 1500);
+        if(MathUtils.random(1, 2) == 1) block.xspeed *= -1;
+        block.hitbox.x = MathUtils.random(0, WORLD_WIDTH - assetSize);
+        block.hitbox.y = WORLD_HEIGHT + assetSize + 10;
+        block.hitbox.width = assetSize;
+        block.hitbox.height = assetSize;
+        blocks.add(block);
+        lastBlockTime = TimeUtils.millis();
+    }
+
+    protected void spawnBullet() {
+        Rectangle bullet = new Rectangle();
+        bullet.x = you.x + assetSize / 2;
+        bullet.y = you.y + assetSize / 2;
+        bullet.width = bulletSize;
+        bullet.height = bulletSize;
+        bullets.add(bullet);
+        lastBulletTime = TimeUtils.millis();
     }
 
     protected void changeTextureSize() {

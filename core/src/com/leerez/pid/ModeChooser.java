@@ -78,7 +78,7 @@ public class ModeChooser implements Screen {
         GSL = new Label("A Constant Pain.", heading2Style);//all horizontal blocks
         GS2L = new Label("A Steady Descent", heading2Style);//classic
         GS3L = new Label("A Speedy Departure.", heading2Style);//lightning
-        GS4L = new Label("No Help.", heading2Style);//no killers
+        GS4L = new Label("An itch to reach boundaries.", heading2Style);//touch left and right walls to score points
         ur1 = new Label("Unlocked at Rank 1", heading2Style);//classic
         ur2 = new Label("Unlocked at Rank 1", heading2Style);//lightning
         ur3 = new Label("Unlocked at Rank 3", heading2Style);//buttons
@@ -131,7 +131,7 @@ public class ModeChooser implements Screen {
                     selectSound.play();
                 }
                 if (pidPrefs.getRank() >= 5) {
-                    //game.setScreen(new EmptyMode(game, camera));
+                    game.setScreen(new LeftRightMode(game, camera));
                 }
                 dispose();
             }

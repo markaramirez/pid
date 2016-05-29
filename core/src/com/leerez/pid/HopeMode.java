@@ -5,24 +5,27 @@ import java.util.Iterator;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 
-public class NormalMode extends MainGameScreen {
+public class HopeMode extends MainGameScreen {
 
-    public NormalMode(TIDS gam, OrthographicCameraWithVirtualViewport cam) {
+    public HopeMode(TIDS gam, OrthographicCameraWithVirtualViewport cam) {
         super(gam, cam);
     }
 
     private void colorChange() {
         r1 -= .00125;
-        if (blockmillis > 100 && blockmillis < 300) blockmillis -= .85;
-        if (blockmillis >= 300) blockmillis--;
-        System.out.println(blockmillis);
+        blockmillis = 100;
         lastColorChange = TimeUtils.millis();
     }
 
     public void timeUpdate() {
+        if (TimeUtils.millis() - lastBulletTime > 500) {
+            spawnBullet();
+        }
         if (TimeUtils.millis() - lastBlockTime > blockmillis) {
             spawnBlock();
         }
@@ -44,8 +47,8 @@ public class NormalMode extends MainGameScreen {
         Iterator<Block> iter = blocks.iterator();
         while (iter.hasNext()) {
             Block block = iter.next();
-            block.hitbox.y -= block.yspeed * Gdx.graphics.getDeltaTime();
-            block.hitbox.x += block.xspeed * Gdx.graphics.getDeltaTime();
+            block.hitbox.y -= block.yspeed * 1.3 * Gdx.graphics.getDeltaTime();
+            block.hitbox.x += block.xspeed * 1.1 * Gdx.graphics.getDeltaTime();
             if (block.hitbox.x + assetSize > WORLD_WIDTH || block.hitbox.x <= 0) {
                 block.xspeed *= -1;
             }
@@ -64,6 +67,11 @@ public class NormalMode extends MainGameScreen {
                     lives--;
                 }
             }
+        }
+        Iterator<Rectangle> iter2 = bullets.iterator();
+        while (iter2.hasNext()) {
+            Rectangle bullet = iter2.next();
+            bullet.y += 1000 * Gdx.graphics.getDeltaTime();
         }
     }
 
@@ -113,6 +121,9 @@ public class NormalMode extends MainGameScreen {
             if (block.color == 3) blockImage = orangeImage;
             if (block.color == 4) blockImage = killerImage;
             game.batch.draw(blockImage, block.hitbox.x, block.hitbox.y, textureSize, textureSize);
+        }
+        for (Rectangle bullet : bullets) {
+            game.batch.draw(youImage, bullet.x, bullet.y, bulletTSize, bulletTSize);
         }
         game.batch.end();
     }

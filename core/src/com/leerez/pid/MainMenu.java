@@ -41,7 +41,7 @@ public class MainMenu implements Screen {
     public TextureAtlas atlas;
     public Skin skin;
     public BitmapFont white, bigger;
-    public Label heading, rank;
+    public Label heading;
     public Table table;
     Texture blockImage;
     Array<Rectangle> blocks;
@@ -109,17 +109,6 @@ public class MainMenu implements Screen {
                 dispose();
             }
         });
-        buttonManual = new TextButton("HOW TO PLAY", textButtonStyle);
-        buttonManual.pad(50);
-        buttonManual.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (pidPrefs.getSoundPref()) {
-                    selectSound.play();
-                }
-                //game.setScreen(new Test(game));
-            }
-        });
         buttonSettings = new TextButton("SETTINGS", textButtonStyle);
         buttonSettings.pad(50);
         buttonSettings.addListener(new ClickListener() {
@@ -137,9 +126,6 @@ public class MainMenu implements Screen {
         table.row();
         table.add(buttonPlay);
         table.getCell(buttonPlay).spaceBottom(15);
-        table.row();
-        table.add(buttonManual);
-        table.getCell(buttonManual).spaceBottom(15);
         table.row();
         table.add(buttonSettings);
         table.getCell(buttonSettings).spaceBottom(15);

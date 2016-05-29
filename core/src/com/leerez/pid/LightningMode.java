@@ -43,12 +43,7 @@ public class    LightningMode extends MainGameScreen {
         Iterator<Block> iter = blocks.iterator();
         while (iter.hasNext()) {
             Block block = iter.next();
-            block.hitbox.y -= block.yspeed * 1.2* Gdx.graphics.getDeltaTime();
-            block.xspeed = 0;
-            block.hitbox.x += block.xspeed * Gdx.graphics.getDeltaTime();
-            if(block.hitbox.x + assetSize > WORLD_WIDTH || block.hitbox.x <= 0) {
-                block.xspeed *= -1;
-            }
+            block.hitbox.y -= block.yspeed * 1.2 * Gdx.graphics.getDeltaTime();
             if (block.hitbox.y + assetSize < 0) {
                 iter.remove();
                 dodges++;
@@ -70,6 +65,7 @@ public class    LightningMode extends MainGameScreen {
 
     public void dieMethod() {
         GameOver.GOdodges = dodges;
+        GameOver.showScore = false;
         if (dodges > pidPrefs.getHighscore()) {
             pidPrefs.setHighscore(dodges);
         }

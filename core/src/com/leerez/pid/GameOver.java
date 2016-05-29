@@ -17,7 +17,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class GameOver implements Screen {
 
-    public static long GOdodges;
+    public static int GOdodges;
+    public static long GOscore;
+    public static boolean showScore;
     public static int GOxpgained;
     BitmapFont white;
     final TIDS game;
@@ -71,7 +73,8 @@ public class GameOver implements Screen {
         stage.draw();
         game.batch.setProjectionMatrix(camera.combined);
         game.batch.begin();
-        white.draw(game.batch, "You evaded " + GOdodges + " possible deaths", 0.025f * MYwidth, MYheight * 0.36562502f);
+        if (!showScore) white.draw(game.batch, "You evaded " + GOdodges + " possible deaths", 0.025f * MYwidth, MYheight * 0.36562502f);
+        if (showScore) white.draw(game.batch, "You scored " + GOscore + ". Good Job.", 0.025f * MYwidth, MYheight * 0.36562502f);
         white.draw(game.batch, "Highscore: " + pidPrefs.getHighscore(), 0.025f * MYwidth, MYheight * 0.34453127f);
         white.draw(game.batch, "You gained " + GOxpgained + " xp", 0.025f * MYwidth, MYheight * 0.28125f);
         white.draw(game.batch, "You need " + Leveler.getNeeded() + " xp until next rank-up", 0.025f * MYwidth, MYheight * 0.26015627f);

@@ -17,13 +17,13 @@ public class HorizontalMode extends MainGameScreen {
 
     private void colorChange() {
         r1 -= .00125;
-        blockmillis = 100;
+        blockmillis = 300;
         lastColorChange = TimeUtils.millis();
     }
 
     public void timeUpdate() {
         if (TimeUtils.millis() - lastBlockTime > blockmillis) {
-            spawnBlock();
+            spawnHBlock();
         }
         if (TimeUtils.millis() - lastColorChange > 50) {
             colorChange();
@@ -43,9 +43,8 @@ public class HorizontalMode extends MainGameScreen {
         Iterator<Block> iter = blocks.iterator();
         while (iter.hasNext()) {
             Block block = iter.next();
+            block.horizontal = true;
             block.hitbox.y -= block.yspeed * 1.1 * Gdx.graphics.getDeltaTime();
-            block.xspeed = MathUtils.random(900, 1800);
-            if(MathUtils.random(1, 2) == 1) block.xspeed *= -1;
             block.hitbox.x += block.xspeed * Gdx.graphics.getDeltaTime();
             if (block.hitbox.x + assetSize > WORLD_WIDTH || block.hitbox.x <= 0) {
                 block.xspeed *= -1;
@@ -70,6 +69,7 @@ public class HorizontalMode extends MainGameScreen {
 
     public void dieMethod() {
         GameOver.GOdodges = dodges;
+        GameOver.showScore = false;
         if (dodges > pidPrefs.getHighscore()) {
             pidPrefs.setHighscore(dodges);
         }
