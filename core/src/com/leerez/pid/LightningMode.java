@@ -104,10 +104,14 @@ public class    LightningMode extends MainGameScreen {
         white.draw(game.batch, "Dodges: " + dodges, 0, WORLD_HEIGHT - 10);
         game.batch.draw(youImage, you.x, you.y, playerTextureSize, playerTextureSize);
         for (Block block: blocks) {
-            if(block.color == 1) blockImage = redImage;
-            if(block.color == 2) blockImage = blueImage;
-            if(block.color == 3) blockImage = orangeImage;
-            if(block.color == 4) blockImage = killerImage;
+            if (block.color == 1) blockImage = redImage;
+            if (block.color == 2) blockImage = blueImage;
+            if (block.color == 3) blockImage = orangeImage;
+            if (block.color == 4) blockImage = aquaImage;
+            if (block.color == 5) blockImage = pinkImage;
+            if (block.color == 6) blockImage = purpleImage;
+            if (block.color == 7) blockImage = yellowImage;
+            if (block.color == 8) blockImage = killerImage;
             game.batch.draw(blockImage, block.hitbox.x, block.hitbox.y, textureSize, textureSize);
         }
         game.batch.end();

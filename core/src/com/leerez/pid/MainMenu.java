@@ -64,7 +64,7 @@ public class MainMenu implements Screen {
         textureSize = camera.virtualViewport.getWidth() * 0.1f;
         MYwidth = camera.virtualViewport.getWidth();
         MYheight = camera.virtualViewport.getHeight();
-        toggleSize = MYwidth * .175f;
+        toggleSize = MYwidth * .195f;
         game = gam;
         stage = new Stage(new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
         Gdx.input.setInputProcessor(stage);
@@ -72,7 +72,6 @@ public class MainMenu implements Screen {
         bigger = new BitmapFont(Gdx.files.internal("bigger.fnt"));
         selectSound = Gdx.audio.newSound(Gdx.files.internal("select.wav"));
         mmdrone = Gdx.audio.newMusic(Gdx.files.internal("PIDmm.wav"));
-        //falling red blocks
         blocks = new Array<Rectangle>();
         blockImage = new Texture(Gdx.files.internal("red.png"));
         mOn = new Texture(Gdx.files.internal("music_icon.png"));
@@ -84,7 +83,6 @@ public class MainMenu implements Screen {
         if (pidPrefs.getMusicPref()) mCur = mOn;
         else mCur = mOff;
         spawnBlock();
-        //end that stuff
         mmdrone.setLooping(true);
         mmdrone.play();
         if (pidPrefs.getMusicPref()) mmdrone.setVolume(.25f);
@@ -109,7 +107,7 @@ public class MainMenu implements Screen {
             }
         });
         sToggle = new Image(sCur);
-        sToggle.setX(MYwidth - MYwidth * .85f);
+        sToggle.setX(MYwidth - MYwidth * .80f);
         sToggle.setY(MYheight - MYheight * .98f);
         sToggle.setWidth(toggleSize);
         sToggle.setHeight(toggleSize);

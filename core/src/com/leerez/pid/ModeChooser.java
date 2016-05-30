@@ -152,7 +152,7 @@ public class ModeChooser implements Screen {
                 dispose();
             }
         });
-        buttonE2 = new TextButton("Into the Emptiness", textButtonStyle);
+        buttonE2 = new TextButton("Into the Insanity", textButtonStyle);
         buttonE2.pad(50);
         buttonE2.addListener(new ClickListener() {
             @Override
@@ -161,7 +161,7 @@ public class ModeChooser implements Screen {
                     selectSound.play();
                 }
                 if (pidPrefs.getRank() >= 5) {
-                    game.setScreen(new LeftRightMode(game, camera));
+                    game.setScreen(new SeizureMode(game, camera));
                 }
                 dispose();
             }

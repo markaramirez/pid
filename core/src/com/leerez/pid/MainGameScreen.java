@@ -14,7 +14,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class MainGameScreen implements Screen {
     final TIDS game;
-    Texture youImage, redImage, blueImage, orangeImage, killerImage, blockImage;
+    Texture youImage, redImage, blueImage, orangeImage, killerImage, blockImage, pinkImage, purpleImage, aquaImage, yellowImage;
     OrthographicCameraWithVirtualViewport camera;
     // --- Use the newly implemented ortho camera with virtual viewport. --- //
     //MultipleVirtualViewportBuilder multipleVirtualViewportBuilder;
@@ -44,7 +44,11 @@ public class MainGameScreen implements Screen {
         redImage = new Texture(Gdx.files.internal("red.png"));
         blueImage = new Texture(Gdx.files.internal("blue.png"));
         orangeImage = new Texture(Gdx.files.internal("orange.png"));
-        killerImage = new Texture(Gdx.files.internal("redKiller.png"));
+        purpleImage = new Texture(Gdx.files.internal("purple.png"));
+        pinkImage = new Texture(Gdx.files.internal("pink.png"));
+        aquaImage = new Texture(Gdx.files.internal("aqua.png"));
+        yellowImage = new Texture(Gdx.files.internal("yellow.png"));
+        killerImage = new Texture(Gdx.files.internal("killer.png"));
         creep2000 = Gdx.audio.newMusic(Gdx.files.internal("PIDv.1.wav"));
         creep2000.setLooping(true);
         white = new BitmapFont(Gdx.files.internal("white.fnt"));

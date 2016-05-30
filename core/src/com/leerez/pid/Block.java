@@ -20,8 +20,8 @@ public class Block {
             if (MathUtils.random(1, 2) == 1) xspeed *= -1;
         }
         yspeed = MathUtils.random(900, 1300);
-        color = MathUtils.random(1, 3);
-        if (killer) color = 4;
+        color = MathUtils.random(1, 7);
+        if (killer) color = 8;
         hitbox = new Rectangle();
     }
 

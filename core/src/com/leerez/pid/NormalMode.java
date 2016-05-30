@@ -18,7 +18,6 @@ public class NormalMode extends MainGameScreen {
         r1 -= .00125;
         if (blockmillis > 100 && blockmillis < 300) blockmillis -= .85;
         if (blockmillis >= 300) blockmillis--;
-        System.out.println(blockmillis);
         lastColorChange = TimeUtils.millis();
     }
 
@@ -111,7 +110,11 @@ public class NormalMode extends MainGameScreen {
             if (block.color == 1) blockImage = redImage;
             if (block.color == 2) blockImage = blueImage;
             if (block.color == 3) blockImage = orangeImage;
-            if (block.color == 4) blockImage = killerImage;
+            if (block.color == 4) blockImage = aquaImage;
+            if (block.color == 5) blockImage = pinkImage;
+            if (block.color == 6) blockImage = purpleImage;
+            if (block.color == 7) blockImage = yellowImage;
+            if (block.color == 8) blockImage = killerImage;
             game.batch.draw(blockImage, block.hitbox.x, block.hitbox.y, textureSize, textureSize);
         }
         game.batch.end();
