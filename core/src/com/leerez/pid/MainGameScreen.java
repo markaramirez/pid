@@ -22,7 +22,7 @@ public class MainGameScreen implements Screen {
     Array<Block> blocks;
     Array<Rectangle> bullets;
     long lastBlockTime, lastColorChange, lastani, lastBulletTime;
-    int dodges ,lives, coins, xpgained;
+    int dodges, lives, coins, xpgained;
     float blockmillis, animillis, r1;
     BitmapFont white;
     Music creep2000;
@@ -87,7 +87,7 @@ public class MainGameScreen implements Screen {
         Block block = new Block();
         block.horizontal = true;
         block.xspeed = MathUtils.random(900, 1500);
-        if(MathUtils.random(1, 2) == 1) block.xspeed *= -1;
+        if (MathUtils.random(1, 2) == 1) block.xspeed *= -1;
         block.hitbox.x = MathUtils.random(0, WORLD_WIDTH - assetSize);
         block.hitbox.y = WORLD_HEIGHT + assetSize + 10;
         block.hitbox.width = assetSize;

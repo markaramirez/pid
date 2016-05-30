@@ -72,15 +72,15 @@ public class HopeMode extends MainGameScreen {
         while (iter2.hasNext()) {
             Rectangle bullet = iter2.next();
             bullet.y += 1300 * Gdx.graphics.getDeltaTime();
-            if(bullet.y > WORLD_HEIGHT) iter2.remove();
+            if (bullet.y > WORLD_HEIGHT) iter2.remove();
         }
         iter = blocks.iterator();
         iter2 = bullets.iterator();
         while (iter.hasNext()) {
             Block block = iter.next();
-            while(iter2.hasNext()) {
+            while (iter2.hasNext()) {
                 Rectangle bullet = iter2.next();
-                if(block.hitbox.overlaps(bullet)) {
+                if (block.hitbox.overlaps(bullet)) {
                     iter.remove();
                     iter2.remove();
                 }

@@ -12,11 +12,13 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Gdx2DPixmap;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
@@ -25,6 +27,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
@@ -44,15 +47,16 @@ public class MainMenu implements Screen {
     public BitmapFont white, bigger;
     public Label heading;
     public Table table;
-    Texture blockImage;
+    Texture blockImage, mOn, sOn, mOff, sOff, mCur, sCur;
     Array<Rectangle> blocks;
     Sound selectSound;
     Music mmdrone;
     TextButton buttonPlay, buttonQuit;
     long lastBlockTime;
     OrthographicCameraWithVirtualViewport camera;
-    float assetSize, textureSize;
+    float assetSize, textureSize, toggleSize;
     float MYwidth, MYheight;
+    Image mToggle, sToggle;
 
     public MainMenu(TIDS gam, OrthographicCameraWithVirtualViewport cam) {
         camera = cam;
@@ -60,6 +64,7 @@ public class MainMenu implements Screen {
         textureSize = camera.virtualViewport.getWidth() * 0.1f;
         MYwidth = camera.virtualViewport.getWidth();
         MYheight = camera.virtualViewport.getHeight();
+        toggleSize = MYwidth * .175f;
         game = gam;
         stage = new Stage(new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
         Gdx.input.setInputProcessor(stage);
@@ -70,10 +75,56 @@ public class MainMenu implements Screen {
         //falling red blocks
         blocks = new Array<Rectangle>();
         blockImage = new Texture(Gdx.files.internal("red.png"));
+        mOn = new Texture(Gdx.files.internal("music_icon.png"));
+        mOff = new Texture(Gdx.files.internal("music_icon_X.png"));
+        sOn = new Texture(Gdx.files.internal("sound_icon.png"));
+        sOff = new Texture(Gdx.files.internal("sound_icon_X.png"));
+        if (pidPrefs.getSoundPref()) sCur = sOn;
+        else sCur = sOff;
+        if (pidPrefs.getMusicPref()) mCur = mOn;
+        else mCur = mOff;
         spawnBlock();
         //end that stuff
         mmdrone.setLooping(true);
-        mmdrone.setVolume(.25f);
+        mmdrone.play();
+        if (pidPrefs.getMusicPref()) mmdrone.setVolume(.25f);
+        else mmdrone.setVolume(0.0f);
+        mToggle = new Image(mCur);
+        mToggle.setX(MYwidth - MYwidth * .98f);
+        mToggle.setY(MYheight - MYheight * .98f);
+        mToggle.setWidth(toggleSize);
+        mToggle.setHeight(toggleSize);
+        mToggle.addListener(new ClickListener() {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                if (pidPrefs.getSoundPref()) {
+                    selectSound.play();
+                }
+                pidPrefs.toggleMusic();
+                if (pidPrefs.getMusicPref()) mCur = mOn;
+                else mCur = mOff;
+                mToggle.setDrawable(new SpriteDrawable(new Sprite(mCur)));
+                if (pidPrefs.getMusicPref()) mmdrone.setVolume(.25f);
+                else mmdrone.setVolume(0.0f);
+                return true;
+            }
+        });
+        sToggle = new Image(sCur);
+        sToggle.setX(MYwidth - MYwidth * .85f);
+        sToggle.setY(MYheight - MYheight * .98f);
+        sToggle.setWidth(toggleSize);
+        sToggle.setHeight(toggleSize);
+        sToggle.addListener(new ClickListener() {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                if (pidPrefs.getSoundPref()) {
+                    selectSound.play();
+                }
+                pidPrefs.toggleSound();
+                if (pidPrefs.getSoundPref()) sCur = sOn;
+                else sCur = sOff;
+                sToggle.setDrawable(new SpriteDrawable(new Sprite(sCur)));
+                return true;
+            }
+        });
         atlas = new TextureAtlas("button.pack");
         skin = new Skin(atlas);
         table = new Table(skin);
@@ -118,6 +169,8 @@ public class MainMenu implements Screen {
         table.row();
         table.add(buttonQuit);
         stage.addActor(table);
+        stage.addActor(sToggle);
+        stage.addActor(mToggle);
     }
 
     private void spawnBlock() {
@@ -134,6 +187,7 @@ public class MainMenu implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.input.setInputProcessor(stage);
         stage.act(delta);
         Iterator<Rectangle> iter = blocks.iterator();
         while (iter.hasNext()) {
@@ -147,7 +201,6 @@ public class MainMenu implements Screen {
             spawnBlock();
         }
         stage.draw();
-
         camera.update();
         game.batch.setProjectionMatrix(camera.combined);
         game.batch.begin();
@@ -166,9 +219,9 @@ public class MainMenu implements Screen {
 
     @Override
     public void show() {
-        if (pidPrefs.getMusicPref()) {
-            mmdrone.play();
-        }
+        mmdrone.play();
+        if (pidPrefs.getMusicPref()) mmdrone.setVolume(.25f);
+        else mmdrone.setVolume(0.0f);
     }
 
     @Override

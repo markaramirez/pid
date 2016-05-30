@@ -240,7 +240,7 @@ public class ModeChooser implements Screen {
         table.row();
         table.add(ur4);
         table.getCell(buttonE3).spaceBottom(170);
-        scroll  = new ScrollPane(table);
+        scroll = new ScrollPane(table);
         screen = new Table(skin);
         screen.setFillParent(true);
         screen.setPosition(0, -150);
