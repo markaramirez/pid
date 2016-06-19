@@ -56,49 +56,52 @@ public class SeizureMode extends MainGameScreen {
     }
 
     public void moveCollision() {
-        Iterator<Block> iter = blocks.iterator();
-        while (iter.hasNext()) {
-            Block block = iter.next();
-            block.hitbox.y -= block.yspeed * 1.5 * Gdx.graphics.getDeltaTime();
-            block.hitbox.x += block.xspeed * 1.3 * Gdx.graphics.getDeltaTime();
-            if (block.hitbox.x + assetSize > WORLD_WIDTH || block.hitbox.x <= 0) {
-                block.xspeed *= -1;
-            }
-            if (block.hitbox.y + assetSize < 0) {
-                iter.remove();
-                dodges++;
-            }
-            if (block.hitbox.overlaps(you)) {
-                if (block.killer) {
+        try {
+            Iterator<Block> iter = blocks.iterator();
+            while (iter.hasNext()) {
+                Block block = iter.next();
+                block.hitbox.y -= block.yspeed * 1.5 * Gdx.graphics.getDeltaTime();
+                block.hitbox.x += block.xspeed * 1.3 * Gdx.graphics.getDeltaTime();
+                if (block.hitbox.x + assetSize > WORLD_WIDTH || block.hitbox.x <= 0) {
+                    block.xspeed *= -1;
+                }
+                if (block.hitbox.y + assetSize < 0) {
                     iter.remove();
-                    blocks.clear();
-                    xpgained += 5;
-                } else {
-                    Gdx.input.vibrate(500);
-                    iter.remove();
-                    lives--;
+                    dodges++;
+                }
+                if (block.hitbox.overlaps(you)) {
+                    if (block.killer) {
+                        iter.remove();
+                        blocks.clear();
+                        xpgained += 5;
+                    } else {
+                        Gdx.input.vibrate(500);
+                        iter.remove();
+                        lives--;
+                    }
                 }
             }
-        }
-        Iterator<Rectangle> iter2 = bullets.iterator();
-        while (iter2.hasNext()) {
-            Rectangle bullet = iter2.next();
-            bullet.y += 1300 * Gdx.graphics.getDeltaTime();
-            if (bullet.y > WORLD_HEIGHT) iter2.remove();
-        }
-        iter = blocks.iterator();
-        iter2 = bullets.iterator();
-        while (iter.hasNext()) {
-            Block block = iter.next();
+            Iterator<Rectangle> iter2 = bullets.iterator();
             while (iter2.hasNext()) {
                 Rectangle bullet = iter2.next();
-                if (block.hitbox.overlaps(bullet)) {
-                    if (iter.hasNext()) iter.remove();
-                    if (iter2.hasNext()) iter2.remove();
-                }
+                bullet.y += 1300 * Gdx.graphics.getDeltaTime();
+                if (bullet.y > WORLD_HEIGHT) iter2.remove();
             }
+            iter = blocks.iterator();
             iter2 = bullets.iterator();
+            while (iter.hasNext()) {
+                Block block = iter.next();
+                while (iter2.hasNext()) {
+                    Rectangle bullet = iter2.next();
+                    if (block.hitbox.overlaps(bullet)) {
+                        if (iter.hasNext()) iter.remove();
+                        if (iter2.hasNext()) iter2.remove();
+                    }
+                }
+                iter2 = bullets.iterator();
+            }
         }
+        catch(Exception e) {}
     }
 
     public void dieMethod() {
